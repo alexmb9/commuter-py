@@ -1,9 +1,15 @@
 import config
 import asyncio
-import json
 from datetime import datetime
+import json
 
 from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+class CoordinatesEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Coordinates):
+            return obj.model_dump()
+        return super().default(obj)
 
 async def main():
     sdk = TravelTimeSdk(app_id=config.app_id, api_key=config.api_key)
@@ -13,16 +19,16 @@ async def main():
         Coordinates(lat=51.517609, lng=-0.138315)
     ]
 
-    # Convert the dictionary to a JSON string
     arrival_time = datetime.now().isoformat()
     data = {
         'coordinates': coordinates,
         'arrival_time': arrival_time,
-        'transportation': Driving().dict()
+        'transportation': Driving().model_dump()
     }
-    json_data = json.dumps(data)
 
-    # Pass the JSON string to the method
+    # Use the custom encoder for serialization
+    json_data = json.dumps(data, cls=CoordinatesEncoder)
+
     results = await sdk.time_map_async(json_data)
     print(results)
 
