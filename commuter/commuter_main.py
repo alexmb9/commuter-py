@@ -20,16 +20,18 @@ async def main():
     ]
 
     arrival_time = datetime.now().isoformat()
+    transportation = Driving().model_dump()
+
     data = {
         'coordinates': coordinates,
         'arrival_time': arrival_time,
-        'transportation': Driving().model_dump()
     }
 
     # Use the custom encoder for serialization
     json_data = json.dumps(data, cls=CoordinatesEncoder)
 
-    results = await sdk.time_map_async(json_data)
+    # Pass the transportation as a separate argument
+    results = await sdk.time_map_async(json_data, transportation)
     print(results)
 
 asyncio.run(main())
