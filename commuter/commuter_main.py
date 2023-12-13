@@ -17,7 +17,7 @@ async def main():
     transportation = Driving()
 
     data = {
-        'coordinates': coordinates,
+        'coordinates': vars(coordinates),
         'arrival_time': arrival_time,
         'transportation': transportation
     }
