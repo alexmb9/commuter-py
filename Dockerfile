@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "./commuter_main.py" ]
+CMD [ "python", "./commuter/commuter_main.py" ]
