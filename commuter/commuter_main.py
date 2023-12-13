@@ -1,10 +1,17 @@
-from traveltimepy import TravelTimeSdk
+import config
+import asyncio
+from datetime import datetime
 
-sdk = TravelTimeSdk(app_id="YOUR_APP_ID", api_key="YOUR_APP_KEY")
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
 
-def main():
+async def main():
+    sdk = TravelTimeSdk(app_id=config.app_id, api_key=config.api_key)
+    
+    results = await sdk.time_map_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+    print(results)
 
-    ##initial function for dockerfile test
-    print("Test Function")
-
-main()
+asyncio.run(main())
