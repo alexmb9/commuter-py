@@ -1,17 +1,51 @@
-import asyncio
+import requests
+import json
 import config
 from datetime import datetime
 
-from traveltimepy import Driving, Coordinates, TravelTimeSdk
+url = "https://api.traveltimeapp.com/v4/time-filter/fast"
 
-async def main():
-    sdk = TravelTimeSdk(app_id=config.app_id, api_key=config.api_key)
-    
-    results = await sdk.time_map_async(
-        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
-        arrival_time=datetime.now(),
-        transportation=Driving()
-    )
-    print(results)
+payload = json.dumps({
+    "locations": [
+    {
+      "id": "London center",
+      "coords": {
+        "lat": 51.508930,
+        "lng": -0.131387
+      }
+    }
+  ],
+  "arrival_searches": {
+    "many_to_one": [
+      {
+        "id": "arrive-at many-to-one search example",
+        "departure_location_ids": [
+          "Hyde Park",
+          "ZSL London Zoo"
+        ],
+        "arrival_location_id": "London center",
+        "travel_time": 1900,
+        "arrival_time_period": "weekday_morning",
+        "properties": [
+          "travel_time",
+        ],
+        "transportation": {
+          "type": "public_transport"
+        }
+      }
+    ],
+    }
+})
 
-asyncio.run(main())
+##could be Accept type needs to be application/geo+json to make the geo json stuff work
+headers = {
+    'Host': 'api.traveltimeapp.com',
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-Application-Id': config.app_id,
+    'X-Api-Key': config.app_id
+}
+
+response = requests.request("POST", url, headers=headers, data=payload)
+
+print(response)
