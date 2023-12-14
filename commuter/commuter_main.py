@@ -6,12 +6,26 @@ from datetime import datetime
 url = "https://api.traveltimeapp.com/v4/time-filter/fast"
 
 payload = json.dumps({
-    "locations": [
+  "locations": [
     {
       "id": "London center",
       "coords": {
         "lat": 51.508930,
         "lng": -0.131387
+      }
+    },
+    {
+      "id": "Hyde Park",
+      "coords": {
+        "lat": 51.508824,
+        "lng": -0.167093
+      }
+    },
+    {
+      "id": "ZSL London Zoo",
+      "coords": {
+        "lat": 51.536067,
+        "lng": -0.153596
       }
     }
   ],
@@ -28,13 +42,33 @@ payload = json.dumps({
         "arrival_time_period": "weekday_morning",
         "properties": [
           "travel_time",
+          "fares"
         ],
         "transportation": {
           "type": "public_transport"
         }
       }
     ],
-    }
+    "one_to_many": [
+      {
+        "id": "arrive-at one-to-many search example",
+        "departure_location_id": "London center",
+        "arrival_location_ids": [
+          "Hyde Park",
+          "ZSL London Zoo"
+        ],
+        "travel_time": 1900,
+        "arrival_time_period": "weekday_morning",
+        "properties": [
+          "travel_time",
+          "fares"
+        ],
+        "transportation": {
+          "type": "public_transport"
+        }
+      }
+    ]
+  }
 })
 
 ##could be Accept type needs to be application/geo+json to make the geo json stuff work
